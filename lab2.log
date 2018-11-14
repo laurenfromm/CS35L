@@ -1,0 +1,163 @@
+Lauren Fromm
+404751250
+
+Lab 2 Log
+
+
+First, I use 'locale' to see if I'm in standard C.
+I'm not, so I use 'export LC_ALL='C''.
+I use 'locale again', and now I am in standard C.
+
+Then, I use 'cd /usr/share/dict' to change directories.
+I use 'ls' to make sure 'words' is in this directory.
+I then use 'cp words ~/cs35l/assignment2'.
+This copies this file to my working directory.
+
+I use the sort command to to sort the words file :
+'sort ~/cs35l/assignment2/words > words'
+
+I then create an html file using the assignment link:
+$ wget http://web.cs.ucla.edu/classes/fall17/cs35L/assign/assign2.html
+But, I want it in a txt file, so I use
+$ mv assign2.html assign2.txt
+
+To use assign2.txt as input for the commands, I use '<'
+$ tr -c 'A-Za-z' '[\n*]' < assign2.txt
+The -c command is used to take the complement of A-Za-z.
+So if a character is not a letter, it will be replaced by a new line.
+If there are multiple characters, there will be multiple new lines.
+
+For the	 next command, I use:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt
+This is the same command as before, except we add the -s flag.
+The -s flag deletes repeated characters.
+This causes every new line character except one at the beginning.
+
+For the next command, I use:
+$ tr -cs 'A-Za-z' '[\n*]' | sort < assign2.txt
+Now, everything is sorted alphabetically.
+All the repeated new linesa are once again deleted.
+
+Next, I use
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u
+The -u flag deletes repeated words.
+Now only one instance of every word is sorted.
+The sort treats capital and lower case letters differently.
+So while there is only one "you", there is also a "You".
+
+Next: 
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm - words
+Comm compares two files.
+This command will compare the sorted list of words with the dictionary.
+Comm outputs 3 columns.
+The first is  words unique to the  first file.
+The second is words unique to the second file.
+The third is words shared by both file.
+Since words has more words than assign2.txt, column 2 is the longest.
+
+The next command is:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - words
+This command runs the same command as above, excepts it omits columns 2 and 3.
+The only column showing is the one that shows words unique to assign2.txt.
+A lot of words showing are words we should see in the words file.
+The reason they're showing is because they contain a capital letter.
+
+Next, we get the hawaiian dictionary by using the following command:
+$ wget http://mauimapp.com/moolelo/hwnwdseng.htm
+But the file hwnwdseng.htm is messy.
+It has a bunch of words besides the Hawaiian dictionary words we want.
+
+I create a script: 'touch buildwords' that I will use to clean up the file.
+The following is my buildwords script, which follows rules given by the spec.
+
+#!/bin/sh
+
+#remove everything after 'kou' (lines 986 - 1012)
+sed '986,1012d' | \
+
+#remove everything before 'adopt' (lines 1 - 29)
+sed '1,29d' | \
+
+#replace okina with apostrophe
+sed "s/\`/'/g" |
+
+#replace all upper characters with lower characters
+tr [:upper:] [:lower:] | \
+
+#get rid of lines with <tr> or </tr>
+sed '/tr>/d'| \
+
+#remove lines with no words
+sed '/<td><br>/{N;N;d;}' |
+
+#remove lines with english words
+sed '1~2d' | \
+
+#remove leading space
+sed 's/^\s*//g'  | \
+
+#remove other characters
+sed 's/<[^>]*>//g' | \
+
+#create newlines when there is a comma
+sed 's/,\s/\n/g' | \
+sed 's/\s/\n/g' | \
+
+#remove empty lines
+sed '/^$/d' | \
+
+#remove words with non-hawaiian characters
+sed  "/[^p^k^'^m^n^w^l^h^a^e^i^o^u]/d" | \
+
+#sort words and delete duplicates
+sort -u
+
+After creating the script, I run it by using the following: 
+$ ./buildwords < hwnwdseng.htm > hwords 
+This runs the webpage through my script, and puts the result in hwords.
+Hwords is now a dictionary list of hawaiian words.
+
+We now use the command above with hwords:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | 
+  tr '[:upper:]' '[:lower:]'| sort -u | comm - hwords
+This runs our hawaiian spell checker 'hwords' on our spec page.
+
+To see how many english words are 'misspelled' we replace 'words' with 'hwords'.
+We also only want the first column to show so we use -23.
+We also only want to know how many misspelled words there are.
+So, we use wc to count the lines.
+Our final command looks like:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | 
+  tr '[:upper:]' '[:lower:]'| sort -u | comm -23 - words | wc -l
+This tells us that there are 39 english words that are misspelled.
+
+To see how many hawaiian words are misspelled, I run it  with hwords:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | 
+  tr '[:upper:]' '[:lower:]'| sort -u | comm -23 - hwords | wc -l
+This tells that there  are 406 hawaiian words misspelled.
+
+I want to find out if words are misspelled as enlish but not as hawaiian.
+I want to run the compare against words and then run it again against hwords:
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | tr '[:upper:]' '[:lower:]'| 
+  sort -u | comm -23 - words | comm -12 - hwords | wc -l
+We use the -23 tag first to show the words misspelled as english.
+We use the -12 to show words that are in hwords.
+This shows that there are 3 words misspelled as english but not as hawaiian.
+These words are:
+halau
+lau
+wiki
+
+I want to see if there are words misspelled in hawaiian but not in english.
+I run the same command as above but invert the hwords and words.
+$ tr -cs 'A-Za-z' '[\n*]' < assign2.txt | tr '[:upper:]' '[:lower:]'| 
+  sort -u | comm -23 - hwords | comm -12 - words | wc -l
+There are 370 words misspelled in hawaiian but not in english.
+Some of these words are:
+many
+may
+mentioned
+merely
+meta
+misspelled
+modify

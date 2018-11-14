@@ -1,0 +1,41 @@
+#!/bin/sh
+
+#remove everything after 'kou' (lines 986 - 1012)
+sed '986,1012d' | \
+
+#remove everything before 'adopt' (lines 1 - 29)
+sed '1,29d' | \
+
+#replace okina with apostrophe
+sed "s/\`/'/g" |
+
+#replace all upper characters with lower characters
+tr [:upper:] [:lower:] | \
+
+#get rid of lines with <tr> or </tr>
+sed '/tr>/d'| \
+
+#remove lines with no words
+sed '/<td><br>/{N;N;d;}' |
+
+#remove lines with english words
+sed '1~2d' | \
+
+#remove leading space
+sed 's/^\s*//g'  | \
+
+#remove other characters
+sed 's/<[^>]*>//g' | \
+
+#create newlines when there is a comma
+sed 's/,\s/\n/g' | \
+sed 's/\s/\n/g' | \
+
+#remove empty lines                                                                                                                                                                                        
+sed '/^$/d' | \
+
+#remove words with non-hawaiian characters
+sed  "/[^p^k^'^m^n^w^l^h^a^e^i^o^u]/d" | \
+
+#sort words and delete duplicates
+sort -u

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+dir=$1 #get first argument (directory)
+
+SORT=`ls -a $dir | sort` #sort contents in directory
+IFS=$'\n'
+let num=0 #declare counter
+declare -a ARR #declare array to hold files
+
+for FILE in $SORT #go through every file in the directory in order
+do 
+    if [ ! -r "$dir/$FILE" ]
+	then
+	echo "ERROR: File is not readable"
+    elif [[ ! -L "$dir/$FILE" && -r "$dir/$FILE" && -f "$dir/$FILE" ]]
+	then
+	    ARR[$num]="$1/$FILE"
+	    let num=num+1	     
+    fi
+done
+echo "There are $num files"
+let i=0
+while [ $i -lt $num ]
+do
+  let j=i+1
+  while [ $j -lt $num ]
+  do
+      if [ $i != $j ]
+          then
+	  cmp -s $ARR[$i] $ARR[$j]
+          if [ $? -eq 0 ]
+	  then   
+	      ln -f "${ARR[$i]}" "${ARR[$j]}"
+	  fi
+      fi
+      let j=j+1
+  done
+  let i=i+1
+done
