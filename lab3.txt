@@ -1,0 +1,82 @@
+Lauren Fromm
+404751250
+
+
+CS 35L
+
+First, I want to install Coreutils 7.6.
+I use wget and the link:
+$ wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+This downloads the tarbel into my directory.
+
+Next I want to untar and unzip:
+$ tar -xzvf coreutils-7.6.tar.gz
+Which outputs all the files that are unzipped.
+
+Next, I make a directory for coreutils:
+$ mkdir coreutilsInstall
+
+Next, I go into the coreutils-7.6 directory:
+$ cd coreutils-7.6
+I use ls to see all the contents.
+To look at the INSTALL file, I use:
+$ emacs INSTALL
+Here, I read about configure, make and make install.
+So coreutils is installed in the directory I made, I use the --prefix flag.
+$ ./configure --prefix=/u/cs/ugrad/jeanne/coreutilsInstall
+
+I then use make and make install to put the contents in my new directory:
+$ make
+$ make install
+All 3 of these commands give long outputs, which are updates on the process.
+
+I then enter the directory to make sure things have installed:
+$ cd ~/coreutilsInstall
+$ ls
+I see that bin, lib, and share are in the directory
+The install was successful.
+
+I then want to reproduce the bug by using ls. 
+I need to call the version of ls in bin for it to work correctly:
+$ ./bin/ls -l
+This outputs alot of files, for example:
+-rwxr-xr-x 1 jeanne csugrad 127248 2017-10-20 11:04 [
+Which is the incorrect version because it uses:
+yyyy-mm-dd tt:tt
+We want:
+Month day year
+
+I then go back to the original folder:
+$ cd ~/cs35l/lab3/coreutiles-7.6
+I want to create a patch file with vim:
+$ vim patch_file
+I copy and paste Brady's patch into this file.
+
+To run the patch, I use:
+$ patch -p1 < patch_file
+
+After the patch was successfuly added, I run make again:
+$ make
+To test, I run the ls command in src:
+$ ./src/ls -l
+And I see that all the files are displaying the correct format.
+For example:
+-rwxr-xr-x 1 jeanne csugrad 127248 Oct 20 11:03 [
+So the patch worked.
+
+To test, I create a new file:
+$ touch new_file
+I also create a file that is a year old:
+$ touch -t 201401210959.30 test_file
+
+I then test ls in both folders:
+In our old, unmoddified coreutilsInstall:
+-rw-r--r-- 1 jeanne csugrad      0 2017-10-20 12:34 new_file
+-rw-r--r-- 1 jeanne csugrad      0 2014-01-21 09:59 test_file
+
+In the new, modified coreutils-7.6
+-rw-r--r-- 1 jeanne csugrad      0 Oct 20 12:40 new_file
+-rw-r--r-- 1 jeanne csugrad      0 Jan 21  2014 test_file
+
+So the patch was successful!
+
