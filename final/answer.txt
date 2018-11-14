@@ -1,0 +1,24 @@
+Solutions to HW2
+
+3.60
+        A. %rdi holds x
+           %esi holds n
+           %eax holds result
+           %edx holds mask
+
+        B. Result is initally set to 0
+           Mask is initally set to 1
+
+        C. testq %rdx, %rdx : If mask is not equal to 0, continue
+           mask !=0;
+
+        D. salq %cl, %rdx:  Mask gets shifted right by the bottom 8 bits of n
+           mask = mask << n;
+
+        E. andq %rdx, %r8 : First the value of x anded with mask is saved
+           orq %r8 %rax: Then result Ors itself with the value saved above
+           result |= (x&mask);
+
+
+
+

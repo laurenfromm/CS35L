@@ -1,0 +1,24 @@
+Lauren Fromm 
+404751250
+
+	Roles of Subwindows
+
+The first window gives a description of what change
+was made. It also shows the order of changes with
+respect to the merges. 
+
+
+The next box shows who made the  change with their 
+name and email.
+
+The next date shows the date and time of the change.
+The dates are mostly in order, unless there are 
+changes made at the same time to two different merges.
+
+On the bottom left is we see a diff format that
+shows the actual file changes so we can see 
+what exactly happened during the change.
+
+The final box on the lower right shows the names
+of the files that were changed.
+

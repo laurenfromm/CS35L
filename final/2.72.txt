@@ -1,0 +1,6 @@
+
+//
+A)Since size_t is an unsigned int, sizeof returns type unsigned. When either operand of an expression is of type unsigned, it makes the other operand unsigned, the expression will always be greater than orequal to zero. To fix this, we need to evalute the operands with seperate expressions.
+
+B) if(maxbytes > 0 && maxbytes >= sizeof(val))
+   	 memcpy(buf,(void*) &val, sizeof(val);

@@ -1,0 +1,45 @@
+Lauren Fromm
+404751250
+
+Homework Questions Lab 3
+
+1. The patch removes the line that says 'case_long_iso_time_style'
+because there is a goto that goes to it that is also deleted in the
+patch. It was not necessary to delete it because since the goto
+would never call it, it would never have been effected. It's in
+a switch statement, but the switch statement would just continue
+through and fall past this line. It was removed only so the code
+looks cleaner.
+
+2. Since the new patch displays dates in English and in an english
+format, a company using the patch that is working with
+international clients might be confused by the format and by the
+language.
+
+3. Using wget to download randline.py onto my system, I use
+the command $ python randline.py /dev/null, which outputs:
+Traceback (most recent call last):
+  File "randline.py", line 70, in <module>
+    main()
+  File "randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/lib64/python2.7/random.py", line 274, in choice
+    return seq[int(self.random() * len(seq))]  
+    	   # raises IndexError if seq is empty
+IndexError: list index out of range
+
+Since dev/null is empty, the randline isn't able to get a
+random element, so there is an index error because the seq
+is empty.
+
+4. Running the command with python3 gives the error:
+ File "randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+
+Since python 3 doesn't have automatic tuple
+paramater unpacking, there is an error thrown
+when too many parameters are passed in.

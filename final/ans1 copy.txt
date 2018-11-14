@@ -1,0 +1,130 @@
+Lauren Fromm
+404751250
+
+Assignment 1 Answers
+
+1.To print commands that have a word in their manuel page, I use 'man -k word'.
+ 'word' can be replaced  with the word you want to search for.
+
+2. I use "which cp" to find that the cp program is located in /usr/bin/cp.
+I reuse "which wc" to find that the wc program is located in /usr/bin/wc.
+
+3. The programs are all in /usr/bin, I search there for 1 char commands. 
+I use '?' to match any single character.
+The final command is 'find /usr/bin -name "?"'. This gives me:
+/usr/bin/[
+/usr/bin/w
+/usr/bin/X
+Using the man command, I can find the uses of all these commands. 
+'man [' :'[' is a test command and checks file types and compares values. 
+'man w' :'w' shows who is logged in and what they are doing. 
+'man X' :'X' is the original X server executable on the windows system. 
+
+4. I use the command "readlink /usr/bin/emacs".
+The file actually being executed is /etc/alternatives/emacs.
+
+5. Using "man chmod" I know 'g' means other users in the file's group.
+'o' means other users not in the file's group. 
+So, 'g+s' sets a group id on execution for the users in the file's group.
+'o-x' removes permission to execute from users not in the file's group.
+
+6.I used the command 'man find' to find how to use -mtime.  
+I use "find -mtime -21".
+This finds all files that have been modified in the past 3 weeks.
+
+7. I need to specify the type by using "find / -type d -mtime -21".
+I am using my own machine on lnxsrv07 network.
+So I instead  use 'find . -type d -mtime -21'.
+This finds the directories modified on my machine in the past 3 weeks:
+.
+./cs35l
+./cs35l/assignment1
+./.cache/abrt
+./perl5
+./.emacs.d/auto-save-list
+
+8. Using "man find" I know to look for symbolic link, I need to use '-type l'. 
+I use 'whereis find' to find where the command is located, which is /usr/bin.
+The command is "find /usr/bin -type l", which gives a long list of the links. 
+I use the pipe '|' with 'wc', a function that will count all the lines. 
+So my final command is 'find /usr/bin -type l|wc' which gives me:
+246     246    4206
+So there are 246 symbolic links on lnxsrv07.
+
+9. First, I switch to /usr/bin by using 'cd /usr/bin'.
+I use 'man ls' to learn how to list files in order. 
+I then can use 'ls -lt, to list the files with their dates. 
+If I only want to see one file, I use "ls -lt -1". 
+To get the very last line, I want to use the 'tail' command.
+The final command to see the oldest file is 'ls -lt|tail -1', which gives me:
+-rwxr-xr-x.   1 root root        3584 Sep  8  2000 detect_ppa
+so detect_ppa is the oldest on lnxsrv07.
+
+10. By using 'man locale', locale gets locale-specific data from 'localedef'.
+Localdef compiles locale definition files by reading charmap and input files.
+If no charmap files are given, the value ANSI_X3.4-1968 is used by default. 
+If no input file is given, localedef reads from standard input.
+
+11. In emacs, by using 'C-h a', you can search through all the commands. 
+By typing in sort, I see that emacs has the following commands:
+
+Buffer-menu-sort              M-x ... RET
+ Sort Tabulated List entries by the column at point.
+sort-columns                  M-x ... RET
+ Sort lines in region alphabetically by a certain range of columns.
+sort-fields                   M-x ... RET
+ Sort lines in region lexicographically by the ARGth field of each
+ line.
+sort-lines                    M-x ... RET
+ Sort lines in region alphabetically; argument means descending
+ order.
+sort-numeric-fields           M-x ... RET
+ Sort lines in region numerically by the ARGth field of each line.
+sort-pages                    M-x ... RET
+ Sort pages in region alphabetically; argument means descending
+ order.
+sort-paragraphs               M-x ... RET
+ Sort paragraphs in region alphabetically; argument means descending
+ order.
+sort-regexp-fields            M-x ... RET
+ Sort the text in the region region lexicographically.
+tabulated-list-col-sort       M-x ... RET
+ Sort Tabulated List entries by the column of the mouse click E.
+tabulated-list-sort           M-x ... RET
+ Sort Tabulated List entries by the column at point.
+
+12. "C-h k" allows me to enter the keys to see a description of the command.
+I did that for each of the following:
+    C-M-a : Move backward to the beginning of a defun.
+    C-M-b : Move backward across one balanced expression
+    C-M-c : Exit from the innermost recursive edit or minibuffer.
+    C-M-d : Move forward down one level of parentheses.
+    C-M-e : Move forward to next end of defun.
+    C-M-f : Move forward across one balanced expression (sexp).
+    C-M-g : none
+    C-M-h : Put mark at end of this defun, point at beginning.
+
+13. I used "C-h k" again in order to find the function of C-g. 
+C-g: Runs the command keyboard-quit.
+This is an interactive compiled Lisp function, signals a 'quit' condition. 
+During execution of Lisp code, this character causes a quit directly.
+As an editor command, this simply beeps.
+
+14. I use "C-h w" and search 'yank' to find which keys activate yank. 
+I see C-y activates yank, I use "C-h k" and enter C-y to see yank's use. 
+Yank reinserts ("pastes" the last stretch of killed text. 
+More precisely, it reinserts the most recent kill.
+
+15. The first thing I do is use "C-h w" and search "dired".
+I find the keys to use to access it, which is 'C-x d'.
+Then I use the dired and seach '/usr/bin'.
+In another linux window I enter the directory.
+I use 'cd /usr/bin' and then the command 'ls -l'. 
+The only differences I notice is at the beginning of dired, it states 
+"total used in directory 301724 available 13313004"
+but when I use the 'ls -l' command, it states 
+"total 301648".
+Also, when using dired, the two following files appear:
+ dr-xr-xr-x.   2 root root       69632 Sep 16 13:15 .
+ drwxr-xr-x.  15 root root        4096 Nov 18  2016 .. 
+These two files don't appear when using 'ls -l'.

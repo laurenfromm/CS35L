@@ -1,0 +1,89 @@
+Lauren Fromm
+404751250
+
+Lab 6 Log
+
+First I use
+$ sort --version
+to see the version of the sort command,
+which was 8.22. Since I want the newest
+version, I use:
+$ export PATH=/usr/local/cs/bin:$PATH
+which updates my commands to the latest
+coreutils. I use
+$ sort --version
+again and see that now the version is 8.28.
+
+Next, I want to create a file that has
+10,000,000 numbers. I know to use the od
+command so I use:
+$man od
+to see how to use it. I want to use the
+-tf flag to specify the output type to be
+floating point. I also want to use
+-N80000000 flag to make sure I get
+10,000,000 numbers. I use 80000000 because
+each floating point is 8 bytes, so that will
+generate the correct amount of nubmers that 
+I want. I get these 80,000,000
+bytes from /dev/urandom. I want to put the
+final output into a file called  output.txt,
+so I add > output.txt to the end of my command.
+My final command looks like:
+$ od -tf -N10000000 /dev/urandom > output.txt
+But, I want to use sed and tr make sure that
+each byte is on its own line with no empty
+spaces, and to delete the addresses.
+
+The addresses are the first 8 characters
+of every line. I use sed to delete the
+first 8 charcters:
+| sed 's/........//' 
+so then my command looks like:
+$ od -tf -N800000000 /dev/urandom | sed 's/........//' > output.txt
+
+I use tr to replace spaces with new lines and
+then delete spaces by piping in
+ | tr -c '\n' ' '   
+So my command is:
+$ od -tf -N800000000 /dev/urandom | sed 's/........//' | tr -s ' ' '\n' > output.txt
+
+I check output.txt, and its formatted correctly.
+
+I then want to time how long sorting this file takes 
+so I use:
+$ time -p sort -g output.txt > /dev/null
+
+This takes a while since their are so many numbers
+to sort. Finally, it outputs: 
+real 208.94
+user 1131.84
+sys 3.28
+
+Next, I want to run sort using the --parallel option.
+I use it with 1, 2, 4, and 8 threads:
+
+$ time -p sort -g --parallel=1 output.txt > /dev/null
+
+real 1090.79
+user 1088.41
+sys 2.33
+
+$ time -p sort -g --parallel=2 output.txt > /dev/null
+real 575.06
+user 1099.16
+sys 2.15
+
+$ time -p sort -g --parallel=4 output.txt > /dev/null
+real 330.72
+user 1125.96
+sys 2.84
+
+$ time -p sort -g --parallel=8 output.txt > /dev/null
+real 214.67
+user 1150.79
+sys 3.22
+
+The parallel command helps cut the real team,
+but it's not that useful in cutting the
+user time.

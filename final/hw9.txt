@@ -1,0 +1,144 @@
+Lauren Fromm
+404751250
+
+	Homework 9 Log
+
+First I want to recopy the diffutils folder:
+$ git clone git://git.savannah.gnu.org/diffutils.git
+
+I then want to checkout version 3 under a branch called 
+"quote":
+$ cd diffutils
+$ git checkout v3.0 -b quote
+
+which outputs:
+
+Switched to a new branch 'quote'
+ 
+Then, I want to apply the patch that I had created in the 
+lab:
+$ patch -p1 < ~/cs35l/lab9/gitroot/diffutils/quote-3.0-patch.txt
+
+which outputs:
+
+patching file src/cmp.c
+patching file src/diff.c
+patching file src/diff3.c
+patching file src/dir.c
+patching file src/sdiff.c
+patching file src/util.c
+
+I then want to see what the add-change-log-entry-other-window
+command does in emacs. I see that this command adds a new entry
+to the change log file for the file I am editing.
+I just use emacs to add change log entrys:
+$ emacs
+C-x 4 a
+I save the ChangeLog using C-x c, so that a copy of all the changes
+I made in the directory I saved.
+
+I then want to add and commit it using:
+$ git add .
+$ git commit -F ChangeLog
+
+I want to see if it works so I use 
+$ git log
+and see my changelog entries:
+
+From 9d2118aeeeae33b2f1ac5f94971c93aa585c0742 Mon Sep 17 00:00:00 2001
+From: Lauren Jeanne Fromm <jeanne@lnxsrv07.seas.ucla.edu>
+Date: Sat, 2 Dec 2017 16:12:28 -0800
+Subject: [PATCH] 2017-12-02  Lauren Jeanne Fromm
+ <jeanne@lnxsrv07.seas.ucla.edu>
+
+        *
+---
+ src/cmp.c   | 12 ++++++------
+ src/diff.c  | 28 ++++++++++++++--------------
+ src/diff3.c | 20 ++++++++++----------
+ src/dir.c   |  4 ++--
+ src/sdiff.c | 16 ++++++++--------
+ src/util.c  |  8 ++++----
+ 6 files changed, 44 insertions(+), 44 deletions(-)
+
+I then want to use git format-patch to create a new patch.
+$ git format-patch -1 --stdout > formatted-patch.txt
+
+I use emacs to look at the patch, and it has worked.
+
+I then want to test that it has worked using a partner.
+I scp my formatted-patch.txt out of linux and send it to
+him and he does the same thing and then I scp it in.
+
+Partner : Ryan Standt
+
+I call his file ryan-patch.txt, and I move it to
+my current directory.
+
+I then check out v3.0 again under "partner":
+$ git checkout v3.0 -b partner
+And then apply the patch with git am:
+$ git am < ryan-patch.txt
+
+I then build the system
+
+$ ./bootstrap
+$ ./configure
+$ make
+$ make check
+
+I check that his works using
+$ ./src/diff . -
+and
+$ ./src/diff --help
+
+and everything is working correctly, so Ryan's patch
+was succesfull.
+I talked to Ryan and he said mine was also successful.
+
+I check that my changelog works by using:
+$ make distdir
+
+This creates a new directory called diffutils-3.0.1-0e18.
+So I cd into it:
+$ cd diffutils-3.0.1-0e18
+and then I use emacs to look at the ChangeLog file.
+I see that it shows:
+
+017-12-03  Ryan Standt  <standt@lnxsrv09.seas.ucla.edu>
+
+        2017-12-03 Ryan Standt <standt@lnxsrv09.seas.ucla.edu>
+                * src/cmp.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+                * src/diff.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+                * src/diff3.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+                * src/dir.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+                * src/sdiff.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+                * src/util.c: Changed occurances of ` to ' based on a change in GNU coding standards
+
+So it worked.
+
+I then want to go into  ~eggert/src/gnu/emacs and use
+gitk.
+I first use a new window to log into the linux servor:
+$ ssh -X jeanne@lnxsrv.seas.ucla.edu
+
+I then switch directories:
+$ cd  ~eggert/src/gnu/emacs
+
+And I make sure my path is correct:
+$ export PATH=/usr/local/cs/bin:$PATH
+
+Finally, I use gitk
+$ gitk
+which opens up a new window in XQuartz, which is shown in
+my screenshot.
+
+The newest merge that is not newer than 2015-01-25 occurs
+on 2015-01-15 where the description reads "Merge branch
+'master' into xwidget". There is also a merge on 2015-01-24
+that is "merge master".

@@ -1,0 +1,13 @@
+A) False: if we have (INT_MIN < 1) on the left hand side, the right hand side would be (-INT_MIN > -1), but (-INT_MIN) is undefined because it's beyond the max limits, so the function is false.
+
+B) True: If we use simple algebra to solve for the left hand side, we get (x+y) *2^4 +y - x which equals 16x + 16y +y -x which equals 17y + 15x, so it is true.
+
+C) True: Again, we use simple algebra. ~x = -x -1, ~y = -y-1, and ~(x+y) = -(x+y) -1. So the left hand side is -x-1-y-1+1 which is -x-y-1. The right hand  side is -x-y-1, so they are always equal.
+
+D) True: Since when the right hand side is originally signed but casted to unsign, the bit representations of both the left hand side and right hand side remain the same, so the two sides are equal.
+
+E) True: When we shift x left twice and then right twice, if the second number is the same as the fourth number, x will remain the same. If they're different numbers, x will only reduce since it will either be made a negative number by sign extension, or the higher positioned bits will just become zero. So x will always be equal to or less than what it originally is.
+
+F) True: When x is positive, x >> 1 and ux >> 1 will always be the same, and (ux & (-1 << 31)) will always be 0 so the two sides are negative. When x is negative, sign extension will change the values of x>>1 and ux>>1, but the second part of the right hand side will always equalize the two sides.
+
+G) False: If x is negative, such as -5, the modulo operator will return a negative remainder. If we try to use the and operator with a negative number and 127, the answer will always be positive. So the two sides won't be equal.
